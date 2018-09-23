@@ -38,7 +38,7 @@ python -m visdom.server
 5) Run the following command to train the model: `python train.py `.
 
 ## Demo
-1) Download the best performing model from the following [Google Drive link](https://drive.google.com/open?id=1DbE4tAkaFYOEItwuIQhlbZypuIPDrArM). 
+1) Download the best performing model from the following [link](https://drive.google.com/open?id=1DbE4tAkaFYOEItwuIQhlbZypuIPDrArM). 
 
 2) Store the head detection model in `checkpoints/ ` folder. 
 
@@ -46,3 +46,14 @@ python -m visdom.server
 ```Shell
 python head_detection_demo.py --img_path <test_image_name> --model_path <model_path>
 ```
+## Results
+|              Method              |     AP     |
+| :--------------------------------------: | :---------: |
+| Overfeat - AlexNet [1] |    0.62    |
+|   ReInspect, Lfix [1]    | 0.60 |
+| ReInspect, Lfirstk [1]  | 0.63 |
+| ReInspect, Lhungarian [1] | 0.78 |
+| **Ours** | **0.70** |
+
+## Reference
+[1] Stewart, Russell, Mykhaylo Andriluka, and Andrew Y. Ng. "End-to-end people detection in crowded scenes." Proceedings of the IEEE conference on computer vision and pattern recognition. 2016.
