@@ -27,7 +27,7 @@ This is the code for FCHD - A Fast and accurate head detector. The manuscript is
 ## Training
 1) Download the caffe pre-trained VGG16 from the following [link](https://drive.google.com/open?id=10AwNitG-5gq-YEJcG9iihosiOu7vAnfO). Store this pre-trained model in `data/pretrained_model ` folder.
  
-2) Download the BRAINWASH dataset from the [official website](https://www.mpi-inf.mpg.de/departments/computer-vision-and-multimodal-computing/software-and-datasets/). Store the dataset in the `data/ ` folder. 
+2) Download the BRAINWASH dataset from the [official website](https://www.mpi-inf.mpg.de/departments/computer-vision-and-multimodal-computing/software-and-datasets/). Unzip it and store the dataset in the `data/ ` folder. 
 
 3) Make appropriate settings in `src/config.py ` file regarding the updated paths.
 
