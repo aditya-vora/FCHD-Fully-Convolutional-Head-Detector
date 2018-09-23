@@ -55,5 +55,11 @@ python head_detection_demo.py --img_path <test_image_name> --model_path <model_p
 | ReInspect, Lhungarian [1] | 0.78 |
 | **Ours** | **0.70** |
 
+## Acknowledgement
+This work builds on many of the excellent works:
+- [Simple faster rcnn pytorch implementation](https://github.com/chenyuntc/simple-faster-rcnn-pytorch) by [Yun Chen](https://github.com/chenyuntc).
+- [py-faster-rcnn](https://github.com/rbgirshick/py-faster-rcnn) by [Ross Girshick](https://github.com/rbgirshick).
+
+
 ## Reference
 [1] Stewart, Russell, Mykhaylo Andriluka, and Andrew Y. Ng. "End-to-end people detection in crowded scenes." Proceedings of the IEEE conference on computer vision and pattern recognition. 2016.
