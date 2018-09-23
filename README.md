@@ -1,7 +1,7 @@
 # FCHD-Fully-Convolutional-Head-Detector
 Code for FCHD - A fast and accurate head detector
 
-This is the code for FCHD - A Fast and accurate head detector. The manuscript is under review in a journal. The full code is implemented in Python with PyTorch framework. 
+This is the code for FCHD - A Fast and accurate head detector. The manuscript is under review in a journal. The full code is implemented in Python with PyTorch framework. See the video on this [link](https://youtu.be/gRPA7Hqk3VQ) for demo.
 
 ## Dependencies
 
