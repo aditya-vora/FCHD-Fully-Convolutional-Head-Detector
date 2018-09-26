@@ -55,6 +55,9 @@ python head_detection_demo.py --img_path <test_image_name> --model_path <model_p
 | ReInspect, Lhungarian [1] | 0.78 |
 | **Ours** | **0.70** |
 
+## Runtime 
+- Runs at 5fps on NVidia Quadro M1000M GPU with 512 CUDA cores. 
+
 ## Acknowledgement
 This work builds on many of the excellent works:
 - [Simple faster rcnn pytorch implementation](https://github.com/chenyuntc/simple-faster-rcnn-pytorch) by [Yun Chen](https://github.com/chenyuntc).
