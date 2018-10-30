@@ -73,13 +73,57 @@ class Transform(object):
         # bboxs = util.flip_bbox(bboxs, (o_H, o_W), x_flip=params['x_flip'])
 
         return img, bboxs, scale
+
+# class HollywoodDataset:
     
-class BrainWashDataset:
-    """ Class specific to the Brainwash dataset. 
-    Args: 
-        dl: datalist
+#     def __init__(self, dl):
+#         self.datalist = dl
     
-    """
+#     def get_example(self, idx):
+#         data_obj = self.datalist[idx]
+#         img_path = data_obj.path
+#         n_boxs = data_obj.n_boxs
+#         bboxs = data_obj.bboxs
+#         print bboxs
+#         img, scale_w, scale_h = self.read_image(img_path)
+#         # scale_bboxs = []
+#         for i in range(n_boxs):
+#             # ymin,xmin,ymax,xmax = bboxs[i,:]
+#             # ymin = bbox[0]*scale_h
+#             # bbox[1] = bbox[1]*scale_w
+#             # bbox[2] = bbox[2]*scale_h
+#             # bbox[3] = bbox[3]*scale_w
+            
+#             bboxs[i,0] = bboxs[i,0]*scale_h
+#             bboxs[i,1] = bboxs[i,1]*scale_w
+#             bboxs[i,2] = bboxs[i,2]*scale_h
+#             bboxs[i,3] = bboxs[i,3]*scale_w
+
+#             # scale_bboxs.append(bbox)
+#         return img, bboxs, n_boxs      
+
+#     def read_image(self, path, dtype=np.float32):
+#         f = Image.open(path)
+#         # w_O, h_O = f.size
+#         W_o, H_o = f.size
+#         # print "Height: %s" %(H_o)
+#         # print "Width: %s" %(W_o)
+#         f = f.resize((640,480), Image.ANTIALIAS)
+#         W_n, H_n = f.size        
+#         # Convert to RGB
+
+#         scale_w = W_n / W_o
+#         scale_h = H_n / H_o
+
+
+#         f.convert('RGB')
+#         # Convert to a numpy array
+#         img = np.asarray(f, dtype=np.float32)
+#         # _, h_N, w_N = img.shape
+#         # Transpose the final image array i.e. C, H, W
+#         return img.transpose((2, 0, 1)), scale_w, scale_h
+
+class HeadDataset:
     def __init__(self, dl):
         self.datalist = dl
 
@@ -104,6 +148,7 @@ class BrainWashDataset:
 
     def read_image(self, path, dtype=np.float32):
         f = Image.open(path)
+  
         # Convert to RGB
         f.convert('RGB')
         # Convert to a numpy array
@@ -111,53 +156,53 @@ class BrainWashDataset:
         # Transpose the final image array i.e. C, H, W
         return img.transpose((2, 0, 1))
 
-class ShanghaiTechDataset:
-    def __init__(self, dl):
-        self.datalist = dl
+# class ShanghaiTechDataset:
+#     def __init__(self, dl):
+#         self.datalist = dl
 
-    def get_example(self, idx):
-        """ Read the image from the image path, specific to the idx given 
-            argument to the function. 
+#     def get_example(self, idx):
+#         """ Read the image from the image path, specific to the idx given 
+#             argument to the function. 
 
-        Args: 
-            idx: idx of the image to be read. 
+#         Args: 
+#             idx: idx of the image to be read. 
         
-        Returns: 
-            img: image after reading from the path
-            bboxs: ground-truth corresponding to the image. 
-            n_bboxs: number of heads in the image. 
-        """
-        data_obj = self.datalist[idx]
-        img_path = data_obj.path
-        print img_path
-        n_boxs = data_obj.n_boxs
-        bboxs = data_obj.bboxs
-        img = self.read_image(img_path)
-        return img, bboxs, n_boxs
+#         Returns: 
+#             img: image after reading from the path
+#             bboxs: ground-truth corresponding to the image. 
+#             n_bboxs: number of heads in the image. 
+#         """
+#         data_obj = self.datalist[idx]
+#         img_path = data_obj.path
+#         print img_path
+#         n_boxs = data_obj.n_boxs
+#         bboxs = data_obj.bboxs
+#         img = self.read_image(img_path)
+#         return img, bboxs, n_boxs
 
-    def read_image(self, path, dtype=np.float32):
-        f = Image.open(path)
-        f = f.resize((640,480), Image.ANTIALIAS)
-        # Convert to RGB
-        f.convert('RGB')
-        # Convert to a numpy array
-        img = np.asarray(f, dtype=np.float32)
-        # Transpose the final image array i.e. C, H, W
-        return img.transpose((2, 0, 1))    
+#     def read_image(self, path, dtype=np.float32):
+#         f = Image.open(path)
+#         f = f.resize((640,480), Image.ANTIALIAS)
+#         # Convert to RGB
+#         f.convert('RGB')
+#         # Convert to a numpy array
+#         img = np.asarray(f, dtype=np.float32)
+#         # Transpose the final image array i.e. C, H, W
+#         return img.transpose((2, 0, 1))    
 
-class ShanghaiTechTestDataset:
-    def __init__(self, datalist):
-        self.datalist = datalist
-        self.db = ShanghaiTechDataset(datalist)
-        self.tsf = Transform(opt.min_size, opt.max_size)
+# class ShanghaiTechTestDataset:
+#     def __init__(self, datalist):
+#         self.datalist = datalist
+#         self.db = ShanghaiTechDataset(datalist)
+#         self.tsf = Transform(opt.min_size, opt.max_size)
     
-    def __getitem__(self, idx):
-        ori_img, bboxs, n_boxs = self.db.get_example(idx)  
-        img, bboxs, scale = self.tsf((ori_img, bboxs, n_boxs))
-        return img.copy(), bboxs.copy(), scale     
+#     def __getitem__(self, idx):
+#         ori_img, bboxs, n_boxs = self.db.get_example(idx)  
+#         img, bboxs, scale = self.tsf((ori_img, bboxs, n_boxs))
+#         return img.copy(), bboxs.copy(), scale     
 
-    def __len__(self):
-        return len(self.datalist)
+#     def __len__(self):
+#         return len(self.datalist)
 
 class Dataset:
     """Dataset class which is assigned by the datalist of the dataset,
@@ -177,7 +222,7 @@ class Dataset:
     """
     def __init__(self, datalist):
         self.datalist = datalist
-        self.db = BrainWashDataset(datalist)
+        self.db = HeadDataset(datalist)
         self.tsf = Transform(opt.min_size, opt.max_size)
 
     def __getitem__(self, idx):
@@ -196,7 +241,7 @@ class Dataset:
         ori_img, bboxs, n_boxs = self.db.get_example(idx)  
         img, bboxs, scale = self.tsf((ori_img, bboxs, n_boxs))
         return img.copy(), bboxs.copy(), scale
-
+        # return ori_img, bboxs, n_boxs
     def __call__(self, idx):
         ori_img, bboxs, n_boxs = self.db.get_example(idx)
         return ori_img, bboxs, n_boxs
