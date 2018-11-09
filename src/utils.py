@@ -81,16 +81,22 @@ def get_ground_truth_name(file_path):
     return 'ground_truth_'+file_id.split('_')[1]
 
 
-def brainwash_data_line_parser(line):
+def data_line_parser(line, dataset):
     if ":" not in line:
         img_path, _ = line.split(";")
-        src_path = os.path.join(opt.data_root_path, img_path.replace('"',''))
+        if dataset == 'hollywood':            
+            src_path = os.path.join(opt.hollywood_dataset_root_path,'Images',img_path.replace('"',''))
+        elif dataset == 'brainwash':
+            src_path = os.path.join(opt.brainwash_dataset_root_path, img_path.replace('"',''))
         num_coordinates = 0
         coordinates = []
         return {'img_path':src_path, 'number': num_coordinates,'coordinates':coordinates}
     else:
         img_path, bbox_coordinates_raw = line.split(":")
-        src_path = os.path.join(opt.data_root_path,img_path.replace('"',''))             
+        if dataset == 'hollywood':
+            src_path = os.path.join(opt.hollywood_dataset_root_path,'Images',img_path.replace('"',''))
+        elif dataset == 'brainwash':
+            src_path = os.path.join(opt.brainwash_dataset_root_path, img_path.replace('"',''))             
         bbox_coordinates_raw = bbox_coordinates_raw.replace("(","")
         bbox_coordinates_raw = bbox_coordinates_raw.replace("),",",")
         bbox_coordinates_raw = bbox_coordinates_raw.replace(").","")
@@ -105,10 +111,9 @@ def brainwash_data_line_parser(line):
             coord = [coord[1], coord[0], coord[3], coord[2]]
             coordinates[entry_idx,:] = coord
             entry_idx += 1
-
     return {'img_path':src_path, 'number': num_coordinates,'coordinates':coordinates}
 
-def get_phase_data_list(data_list_path):
+def get_phase_data_list(data_list_path, dataset):
     """Return a list of data object.
     data object: path, n_boxs, bboxs
     
@@ -121,42 +126,43 @@ def get_phase_data_list(data_list_path):
     data_list = []
     with open(data_list_path, 'rb') as fp:
         for line in fp.readlines():
-            d = brainwash_data_line_parser(line)
+            d = data_line_parser(line, dataset)
             if d['number'] != 0:
                 d_object = data(d)
                 data_list.append(d_object)
     return data_list
 
-def shanghai_tech_phase_data(data_list_path, phase):
-    data_list = []
-    d = {}
-    for img_path in data_list_path:
-        gt_name = get_ground_truth_name(img_path)
-        gt_path = os.path.join(opt.shanghai_data_root_path, phase ,'annotations', gt_name)
-        gt = load_annotations(gt_path)
-        d['img_path'] = img_path
-        d['number'] = gt['number']
-        bboxs_xyxy = gt['coordinates']
-        bboxs_yxyx = np.zeros(shape=(int(gt['number']),4),dtype=np.float)
-        entry_idx = 0
-        for i in range(gt['coordinates'].shape[0]):
-            xmin, ymin, xmax, ymax = bboxs_xyxy[i,:]
-            coord = [ymin, xmin, ymax, xmax]
-            bboxs_yxyx[entry_idx,:] = coord
-            entry_idx += 1
+# def shanghai_tech_phase_data(data_list_path, phase):
+#     data_list = []
+#     d = {}
+#     for img_path in data_list_path:
+#         gt_name = get_ground_truth_name(img_path)
+#         gt_path = os.path.join(opt.shanghai_data_root_path, phase ,'annotations', gt_name)
+#         gt = load_annotations(gt_path)
+#         d['img_path'] = img_path
+#         d['number'] = gt['number']
+#         bboxs_xyxy = gt['coordinates']
+#         bboxs_yxyx = np.zeros(shape=(int(gt['number']),4),dtype=np.float)
+#         entry_idx = 0
+#         for i in range(gt['coordinates'].shape[0]):
+#             xmin, ymin, xmax, ymax = bboxs_xyxy[i,:]
+#             coord = [ymin, xmin, ymax, xmax]
+#             bboxs_yxyx[entry_idx,:] = coord
+#             entry_idx += 1
 
-        d['coordinates'] = bboxs_yxyx
-        if d['number'] != 0:
-            d_object = data(d)
-            data_list.append(d_object)
+#         d['coordinates'] = bboxs_yxyx
+#         if d['number'] != 0:
+#             d_object = data(d)
+#             data_list.append(d_object)
     
-    return data_list
+#     return data_list
 
 
 def check_loaded_data(d):
     path = d.path
     n_boxs = d.n_boxs
     bboxs = d.bboxs
+
     # print bboxs.shape
     image = cv2.imread(path)
     image_np = np.copy(np.asarray(image, dtype=np.uint8))
@@ -188,10 +194,10 @@ def draw_bboxs(image, bboxs, n_boxs, is_transpose=True):
         draw_bounding_box_on_image_array(image_np, ymin,xmin,ymax,xmax)
     return image_np
 
-def _test():
-    img_path_list = [filename for filename in glob.glob((os.path.join(opt.shanghai_data_root_path,'images','*.jpg')))]
-    data_list = shanghai_tech_phase_data(img_path_list)    
-    pass
+# def _test():
+#     img_path_list = [filename for filename in glob.glob((os.path.join(opt.shanghai_data_root_path,'images','*.jpg')))]
+#     data_list = shanghai_tech_phase_data(img_path_list)    
+#     pass
 
-if __name__ == "__main__":
-    _test()
+# if __name__ == "__main__":
+#     _test()
