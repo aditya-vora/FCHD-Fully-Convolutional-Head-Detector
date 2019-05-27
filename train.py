@@ -20,7 +20,7 @@ from src.vis_tool import visdom_bbox
 from src.bbox_tools import bbox_iou
 
 dataset_name = 'brainwash'
-phases = ['train', 'val', 'test']
+phases = ['train', 'val']
 data_check_flag = False
 
 def eval(dataloader, head_detector):
