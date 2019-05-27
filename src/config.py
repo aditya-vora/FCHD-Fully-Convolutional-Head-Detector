@@ -1,8 +1,8 @@
 from pprint import pprint
 
 class Config:
-    brainwash_dataset_root_path = './data/brainwash_raw'
-    hollywood_dataset_root_path = './data/HollywoodHeads'
+    brainwash_dataset_root_path = './data/'
+    hollywood_dataset_root_path = './data/'
     min_size = 600  # image resize
     max_size = 1000 # image resize
     caffe_pretrain = True
