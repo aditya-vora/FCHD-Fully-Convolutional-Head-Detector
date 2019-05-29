@@ -132,7 +132,9 @@ class ProposalCreator:
         hs = roi[:, 2] - roi[:, 0]
         ws = roi[:, 3] - roi[:, 1]
 
-        min_size=np.array(min_size)
+        min_size = np.array(min_size)
+        hs = np.array(hs)
+        ws = np.array(ws)
         keep = np.where((hs >= min_size) & (ws >= min_size))[0]
         roi = roi[keep, :]
         score = score[keep]
