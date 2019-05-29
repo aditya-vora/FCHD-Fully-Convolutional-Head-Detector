@@ -104,7 +104,7 @@ def train():
             img, bbox = img.cuda().float(), bbox_.cuda()
             img, bbox = Variable(img), Variable(bbox)
             _, _, _ = trainer.train_step(img, bbox, scale)
-            print "Image no. {}: Done!\r".format(ii),
+            print "\rImage no. {}: Done!".format(ii),
             if (ii+1) % opt.plot_every == 0:
                 trainer.vis.plot_many(trainer.get_meter_data())
                 ori_img_ = inverse_normalize(at.tonumpy(img[0]))
