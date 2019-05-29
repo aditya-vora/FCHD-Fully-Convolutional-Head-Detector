@@ -116,7 +116,7 @@ def train():
                 trainer.vis.text(str(trainer.rpn_cm.value().tolist()), win='rpn_cm')
 
         avg_test_CorrLoc = eval(test_dataloader, head_detector_vgg16)
-
+        print
         print("Epoch {} of {}.".format(epoch+1, opt.epoch))
         print("  test average corrLoc accuracy:\t\t{:.3f}".format(avg_test_CorrLoc))
 
