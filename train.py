@@ -77,13 +77,13 @@ def train():
                 test_data_list = utils.get_phase_data_list(test_data_list_path, dataset_name)
 
     print "Number of images for training: %s" %(len(train_data_list))
-    print "Number of images for val: %s" %(len(val_data_list))
-    print "Number of images for test: %s" %(len(test_data_list))
+    if 'val' in phase: print "Number of images for val: %s" %(len(val_data_list))
+    if 'test'  in phase: print "Number of images for test: %s" %(len(test_data_list))
 
     if data_check_flag:
         utils.check_loaded_data(train_data_list[random.randint(1,len(train_data_list))])
-        utils.check_loaded_data(val_data_list[random.randint(1,len(val_data_list))])
-        utils.check_loaded_data(test_data_list[random.randint(1,len(test_data_list))])
+        if 'val' in phase: utils.check_loaded_data(val_data_list[random.randint(1,len(val_data_list))])
+        if 'test' in phase: utils.check_loaded_data(test_data_list[random.randint(1,len(test_data_list))])
 
     # Load the train dataset
     train_dataset = Dataset(train_data_list)
