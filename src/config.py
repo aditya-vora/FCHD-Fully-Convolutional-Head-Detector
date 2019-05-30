@@ -7,7 +7,7 @@ class Config:
     max_size = 1000 # image resize
     caffe_pretrain = True
     caffe_pretrain_path = './data/pretrained_model/vgg16_caffe.pth'
-    model_save_path = './checkpoints'
+    model_save_path = './checkpoints'  # MODIFIED
     # sigma for l1_smooth_loss
     rpn_sigma = 3.
     test_output_path = './output'
