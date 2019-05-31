@@ -22,7 +22,7 @@ class Config:
 
     pretrained_model = 'vgg16'
 
-    epoch = 10
+    epoch = 15
 
     use_adam = False # Use Adam optimizer
     use_chainer = False # try match everything as chainer
