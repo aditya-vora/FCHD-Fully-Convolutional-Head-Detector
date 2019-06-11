@@ -8,7 +8,7 @@ from trainer import Head_Detector_Trainer
 from PIL import Image
 import numpy as np
 from data.dataset import preprocess
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
 import src.array_tool as at
 from src.vis_tool import visdom_bbox
 import argparse
@@ -16,11 +16,8 @@ import src.utils as utils
 from src.config import opt
 import time
 
-SAVE_FLAG = 0
-THRESH = 0.01
-IM_RESIZE = False
 
-def read_img(path):
+def read_img(path, IM_RESIZE=False):
     f = Image.open(path)
     if IM_RESIZE:
         f = f.resize((640,480), Image.ANTIALIAS)
@@ -29,14 +26,16 @@ def read_img(path):
     img_raw = np.asarray(f, dtype=np.uint8)
     img_raw_final = img_raw.copy()
     img = np.asarray(f, dtype=np.float32)
-    _, H, W = img.shape
+    # _, H, W = img.shape
     img = img.transpose((2,0,1))
+    _, H, W = img.shape
     img = preprocess(img)
     _, o_H, o_W = img.shape
     scale = o_H / H
     return img, img_raw_final, scale
 
-def detect(img_path, model_path):
+
+def detect(img_path, model_path, SAVE_FLAG=0, THRESH=0.01):
     file_id = utils.get_file_id(img_path)
     img, img_raw, scale = read_img(img_path)
     head_detector = Head_Detector_VGG16(ratios=[1], anchor_scales=[2,4])
@@ -52,21 +51,24 @@ def detect(img_path, model_path):
     print ("[INFO] Head detection over. Time taken: {:.4f} s".format(tt))
     for i in range(pred_bboxes_.shape[0]):
         ymin, xmin, ymax, xmax = pred_bboxes_[i,:]
-        utils.draw_bounding_box_on_image_array(img_raw,ymin, xmin, ymax, xmax)
+        utils.draw_bounding_box_on_image_array(img_raw, ymin/scale, xmin/scale, ymax/scale, xmax/scale)
     plt.axis('off')
     plt.imshow(img_raw)
     if SAVE_FLAG == 1:
+        if not os.path.exists(opt.test_output_path):  # Create the directory
+            os.makedirs(opt.test_output_path)  # If it doesn't exist
+
         plt.savefig(os.path.join(opt.test_output_path, file_id+'.png'), bbox_inches='tight', pad_inches=0)
     else:
-        plt.show()    
+        plt.show()
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--img_path", type=str, help="test image path")
-    parser.add_argument("--model_path", type=str, default='./checkpoints/sess:2/head_detector08120858_0.682282441835')
+    parser.add_argument("--model_path", type=str, default='./checkpoints/head_detector_final')
     args = parser.parse_args()
-    detect(args.img_path, args.model_path)
+    detect(args.img_path, args.model_path, SAVE_FLAG=1)
     # model_path = './checkpoints/sess:2/head_detector08120858_0.682282441835'
 
     # test_data_list_path = os.path.join(opt.data_root_path, 'brainwash_test.idl')
@@ -83,6 +85,3 @@ if __name__ == "__main__":
     #         src_path = os.path.join(opt.data_root_path, img_path.replace('"',''))
     #         detect(src_path, model_path, save_idx)
     #         save_idx += 1
-
-
-

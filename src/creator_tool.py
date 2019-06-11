@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*- 
+# -*- coding: utf-8 -*-
 
 import numpy as np
 import cupy as cp
@@ -126,12 +126,15 @@ class ProposalCreator:
             roi[:, slice(0, 4, 2)], 0, img_size[0])
         roi[:, slice(1, 4, 2)] = np.clip(
             roi[:, slice(1, 4, 2)], 0, img_size[1])
-        
+
 
         min_size = self.min_size * scale
         hs = roi[:, 2] - roi[:, 0]
         ws = roi[:, 3] - roi[:, 1]
 
+        min_size = np.array(min_size)
+        hs = np.array(hs)
+        ws = np.array(ws)
         keep = np.where((hs >= min_size) & (ws >= min_size))[0]
         roi = roi[keep, :]
         score = score[keep]

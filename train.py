@@ -1,7 +1,7 @@
 from __future__ import division
 
 import os
-import numpy as np 
+import numpy as np
 from torch.autograd import Variable
 from torch.utils import data as data_
 import torch
@@ -13,21 +13,21 @@ import cv2
 from src.head_detector_vgg16 import Head_Detector_VGG16
 from trainer import Head_Detector_Trainer
 from src.config import opt
-import src.utils as utils 
+import src.utils as utils
 from data.dataset import Dataset, inverse_normalize
 import src.array_tool as at
 from src.vis_tool import visdom_bbox
 from src.bbox_tools import bbox_iou
 
-dataset_name = 'hollywood'
-phases = ['train', 'val', 'test']
+dataset_name = 'brainwash'
+phases = ['train', 'val']
 data_check_flag = False
 
 def eval(dataloader, head_detector):
     """
     Given the dataloader of the test split compute the
-    average corLoc of the dataset using the head detector 
-    model given as the argument to the function. 
+    average corLoc of the dataset using the head detector
+    model given as the argument to the function.
     """
     test_img_num = 0
     test_corrLoc = 0.0
@@ -51,44 +51,44 @@ def eval(dataloader, head_detector):
             test_img_num += 1
     return test_corrLoc / test_img_num
 
-def train():    
+def train():
     # Get the dataset
     for phase in phases:
         if phase == 'train':
             if dataset_name == 'hollywood':
                 train_data_list_path = os.path.join(opt.hollywood_dataset_root_path, 'hollywood_train.idl')
-                train_data_list = utils.get_phase_data_list(train_data_list_path, dataset_name)    
+                train_data_list = utils.get_phase_data_list(train_data_list_path, dataset_name)
             if dataset_name == 'brainwash':
                 train_data_list_path = os.path.join(opt.brainwash_dataset_root_path, 'brainwash_train.idl')
                 train_data_list = utils.get_phase_data_list(train_data_list_path, dataset_name)
         elif phase == 'val':
             if dataset_name == 'hollywood':
                 val_data_list_path = os.path.join(opt.hollywood_dataset_root_path, 'hollywood_val.idl')
-                val_data_list = utils.get_phase_data_list(val_data_list_path, dataset_name)    
+                val_data_list = utils.get_phase_data_list(val_data_list_path, dataset_name)
             if dataset_name == 'brainwash':
                 val_data_list_path = os.path.join(opt.brainwash_dataset_root_path, 'brainwash_val.idl')
-                val_data_list = utils.get_phase_data_list(val_data_list_path, dataset_name)      
+                val_data_list = utils.get_phase_data_list(val_data_list_path, dataset_name)
         elif phase == 'test':
             if dataset_name == 'hollywood':
                 test_data_list_path = os.path.join(opt.hollywood_dataset_root_path, 'hollywood_test.idl')
-                test_data_list = utils.get_phase_data_list(test_data_list_path, dataset_name)    
+                test_data_list = utils.get_phase_data_list(test_data_list_path, dataset_name)
             if dataset_name == 'brainwash':
                 test_data_list_path = os.path.join(opt.brainwash_dataset_root_path, 'brainwash_test.idl')
-                test_data_list = utils.get_phase_data_list(test_data_list_path, dataset_name)      
-    
-    print "Number of images for training: %s" %(len(train_data_list))
-    print "Number of images for val: %s" %(len(val_data_list))
-    print "Number of images for test: %s" %(len(test_data_list))
+                test_data_list = utils.get_phase_data_list(test_data_list_path, dataset_name)
 
-    if data_check_flag: 
+    print "Number of images for training: %s" %(len(train_data_list))
+    if 'val' in phase: print "Number of images for val: %s" %(len(val_data_list))
+    if 'test'  in phase: print "Number of images for test: %s" %(len(test_data_list))
+
+    if data_check_flag:
         utils.check_loaded_data(train_data_list[random.randint(1,len(train_data_list))])
-        utils.check_loaded_data(val_data_list[random.randint(1,len(val_data_list))])
-        utils.check_loaded_data(test_data_list[random.randint(1,len(test_data_list))])
+        if 'val' in phase: utils.check_loaded_data(val_data_list[random.randint(1,len(val_data_list))])
+        if 'test' in phase: utils.check_loaded_data(test_data_list[random.randint(1,len(test_data_list))])
 
     # Load the train dataset
     train_dataset = Dataset(train_data_list)
     test_dataset = Dataset(val_data_list)
-    print "Load data." 
+    print "Load data."
 
     train_dataloader = data_.DataLoader(train_dataset, batch_size=1,shuffle=True, num_workers=1)
     test_dataloader = data_.DataLoader(test_dataset, batch_size=1, shuffle=True, num_workers=1)
@@ -104,7 +104,7 @@ def train():
             img, bbox = img.cuda().float(), bbox_.cuda()
             img, bbox = Variable(img), Variable(bbox)
             _, _, _ = trainer.train_step(img, bbox, scale)
-            print "Forward and backward pass done."
+            print "\rImage no. {}: Done!".format(ii),
             if (ii+1) % opt.plot_every == 0:
                 trainer.vis.plot_many(trainer.get_meter_data())
                 ori_img_ = inverse_normalize(at.tonumpy(img[0]))
@@ -116,12 +116,12 @@ def train():
                 trainer.vis.text(str(trainer.rpn_cm.value().tolist()), win='rpn_cm')
 
         avg_test_CorrLoc = eval(test_dataloader, head_detector_vgg16)
-        
+        print
         print("Epoch {} of {}.".format(epoch+1, opt.epoch))
         print("  test average corrLoc accuracy:\t\t{:.3f}".format(avg_test_CorrLoc))
-		
+
         model_save_path = trainer.save(best_map=avg_test_CorrLoc)
-		
+
         if epoch == 8:
             trainer.load(model_save_path)
             trainer.head_detector.scale_lr(opt.lr_decay)
