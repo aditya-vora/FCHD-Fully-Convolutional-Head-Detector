@@ -1,15 +1,16 @@
 from pprint import pprint
 
 class Config:
-    brainwash_dataset_root_path = '/home/aditya-tyco/Desktop/aditya_personal_projects/head_detection_v5/data/brainwash_raw'
-    hollywood_dataset_root_path = '/home/aditya-tyco/Desktop/aditya_personal_projects/head_detection_v5/data/HollywoodHeads'
+    brainwash_dataset_root_path = './data/'
+    hollywood_dataset_root_path = './data/'
     min_size = 600  # image resize
-    max_size = 1000 # image resize 
+    max_size = 1000 # image resize
     caffe_pretrain = True
-    caffe_pretrain_path = '/home/aditya-tyco/Desktop/aditya_personal_projects/head_detection_v5/data/pretrained_model/vgg16_caffe.pth'
-    model_save_path = '/home/aditya-tyco/Desktop/aditya_personal_projects/head_detection_v5/checkpoints'
+    caffe_pretrain_path = './data/pretrained_model/vgg16_caffe.pth'
+    model_save_path = './checkpoints'
     # sigma for l1_smooth_loss
     rpn_sigma = 3.
+    test_output_path = './output'
 
     weight_decay = 0.0005
     lr_decay = 0.1  # 1e-3 -> 1e-4
@@ -22,7 +23,7 @@ class Config:
     pretrained_model = 'vgg16'
 
     epoch = 15
-    
+
     use_adam = False # Use Adam optimizer
     use_chainer = False # try match everything as chainer
     def _parse(self, kwargs):
