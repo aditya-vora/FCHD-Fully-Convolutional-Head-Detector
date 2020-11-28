@@ -15,7 +15,7 @@ except:
     from ._nms_gpu_post_py import _nms_gpu_post
 
 
-@cp.util.memoize(for_each_device=True)
+@cp.memoize(for_each_device=True)
 def _load_kernel(kernel_name, code, options=()):
     cp.cuda.runtime.free(0)
     assert isinstance(options, tuple)
