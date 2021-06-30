@@ -26,7 +26,7 @@ This is the code for FCHD - A Fast and accurate head detector. See [the paper](h
   ```
 
 ## Training
-1) Download the caffe pre-trained VGG16 from the following [link](https://drive.google.com/open?id=10AwNitG-5gq-YEJcG9iihosiOu7vAnfO). Store this pre-trained model in `data/pretrained_model ` folder.
+1) Download the caffe pre-trained VGG16 from the following [link](https://drive.google.com/drive/folders/1WBk62oGcRiGHd07hEon1NFlyV4Rrdvnu?usp=sharing). Store this pre-trained model in `data/pretrained_model ` folder. The filename is `vgg16_caffe.pth`.
  
 2) Download the BRAINWASH dataset from the [official website](https://www.mpi-inf.mpg.de/departments/computer-vision-and-multimodal-computing/software-and-datasets/). Unzip it and store the dataset in the `data/ ` folder. 
 
@@ -39,7 +39,7 @@ python -m visdom.server
 5) Run the following command to train the model: `python train.py `.
 
 ## Demo
-1) Download the best performing model from the following [link](https://drive.google.com/open?id=1DbE4tAkaFYOEItwuIQhlbZypuIPDrArM). 
+1) Download the best performing model from the following [link](https://drive.google.com/drive/folders/1WBk62oGcRiGHd07hEon1NFlyV4Rrdvnu?usp=sharing). The filename is `head_detector_final`.
 
 2) Store the head detection model in `checkpoints/ ` folder. 
 
